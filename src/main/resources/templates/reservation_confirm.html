@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- BootstrapのCSS読み込み -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+ <link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>入力内容確認</title>
+</head>
+<body>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-7">
+  <a class="navbar-brand" th:href="@{/top}"><img th:src="@{/img/logo.png}" alt="" width="150" height="70" class="d-inline-block align-text-top"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	<a th:href="@{/toPlanList}"> <button class="btn btn-outline-danger" type="submit" style="font-family:serif">ご宿泊予約</button></a>
+  </div>
+</nav>
+			<div class="
+            table-responsive
+            col-lg-12
+            col-md-12
+            col-sm-12
+          ">
+			  <img src="/img/booking.jpg" class="img-fluid">
+			</div>
+
+<div class="margin">
+	<table class="table">
+	<th:block>
+	  <thead class="table-dark">
+	    <tr><th style="font-family:serif" colspan="8" th:text="${session.plan.name}"></th></tr>
+	  </thead>
+	  <tbody>
+		<tr>
+	    	<td style="font-family:serif">
+	    		<div  th:if="${session.plan.roomId == 1 || session.plan.roomId == 2}" th:text="'〇禁煙'" style="color:red"></div>
+	    		<div  th:unless="${session.plan.roomId == 1 || session.plan.roomId == 2}" th:text="'&emsp;禁煙'" style="color:darkgray"></div>
+	    	</td>
+	    	<td style="font-family:serif">
+	    		<div th:if="${session.plan.roomId == 2 || session.plan.roomId == 4}" th:text="'〇客室露天風呂'" style="color:red"></div>
+	    		<div th:unless="${session.plan.roomId == 2 || session.plan.roomId == 4}" th:text="'&emsp;客室露天風呂'" style="color:darkgray"></div>
+	    	</td>
+	    	<td style="font-family:serif">
+	    		<div th:if="${session.plan.breakfast == 1}" th:text="'〇朝食'" style="color:red"></div>
+	    		<div th:unless="${session.plan.breakfast == 1}" th:text="'&emsp;朝食'" style="color:darkgray"></div>
+	    	</td>
+	    	<td style="font-family:serif">
+	    		<div th:if="${session.plan.dinner == 1}" th:text="'〇夕食'" style="color:red"></div>
+	    		<div th:unless="${session.plan.dinner == 1}" th:text="'&emsp;夕食'" style="color:darkgray"></div>
+	    	</td>
+	    </tr>
+	    <tr>
+	    	<td colspan="4" style="font-family:serif">
+	      		<th:block th:each="content, stat : ${session.plan.comment.split('\r\n|\r|\n', -1)}">
+	  			<div th:text="${content}"></div>
+	      	</td>
+	    </tr>
+	  </tbody>
+	  </th:block>
+	</table>
+</div>
+
+<br><br>
+
+
+<div style="font-family:serif">
+
+<div class="row">
+	<div
+          class="
+            table-responsive
+            col-lg-2
+            col-md-2
+            col-sm-2
+          "
+        ></div>
+<div
+          class="
+            table-responsive
+            col-lg-8
+            col-md-8
+            col-sm-8
+          "
+        >
+
+<form th:action="@{/reservation/complete}" method="post" th:object="${reservationForm}">
+	<table class="table text-center">
+		<thead class="table-dark">
+	  	  <tr><th style="font-family:serif" colspan="8">入力内容の確認</th></tr>
+		</thead>
+			<tr><tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">名前</label></td>
+			<td class="text-center">
+				<div class="col-md-12">
+			  	 <div th:text="${session.reservation.name}">ああああ</div>
+				</div>
+			</td><td width="100" colspan="2"></td></tr>
+			<tr><td></td>
+			<td><label for="exampleFormControlInput1" class="form-label">ふりがな</label></td>
+			<td class="text-center">
+				<div class="col-md-12">
+				<div th:text="${session.reservation.kana}">ああああ</div>
+				</div>
+			</td><td width="100"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">郵便番号</label></td>
+			<td class="text-center">
+				<div class="col-md-12">
+				<div th:text="${session.reservation.zipcode}">000</div>
+				</div>
+			</td><td colspan="2" width="100"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">住所</label></td>
+			<td class="text-center">
+			<div class="col-md-12">
+				<div th:text="${session.reservation.address}">あああ</div>
+				</div>
+			</td><td width="100" colspan="2"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">電話番号</label></td>
+			<td class="text-center">
+				<div class="col-md-12">
+				<div th:text="${session.reservation.telephone}">000</div>
+				</div>
+			</td><td width="100" colspan="2"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">メールアドレス</label></td>
+			<td class="text-center">
+				<div class="col-md-12">
+				<div th:text="${session.reservation.email}">a@aaa</div>
+				</div>
+			</td><td width="100" colspan="2"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label col-md-12">宿泊日</label></td>
+			<td class="text-center">
+				<div class="col-md-12">
+				<div th:text="${session.reservation.checkinDate}">0000</div>
+				</div>
+			</td><td width="100" colspan="2"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">宿泊日数</label></td>
+			<td class="text-center"><div class="col-md-12">
+				<div th:text="${session.reservation.stayDays}">000</div>
+			</div>
+			</td><td width="100" colspan="2"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">宿泊人数</label></td>
+			<td class="text-center"><div class="col-md-12">
+				<div th:text="${session.reservation.numOfGuest}">0</div>
+				</div>
+			</td><td width="100" colspan="2"></td></tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">お支払方法</label></td>
+			<td class="text-center">
+			<div class="col-md-12">
+				<div th:if= "${session.reservation.payMethod} == '0'" th:text="現地決済"></div>
+			　　　　<div th:if= "${session.reservation.payMethod} == '1'" th:text="クレジットカード決済"></div>
+				</div>
+			</td><td width="100" colspan="2"></td>
+			</tr>
+			<tr><td width="100"></td>
+			<td><label for="exampleFormControlInput1" class="form-label">合計金額</label></td>
+			<td class="text-center"><div class="col-md-12">
+				<div th:text="${#numbers.formatInteger(session.reservation.totalPrice, 1, 'COMMA')} +'円'"></div>
+				</div>
+			</td><td width="100" colspan="2"></td></tr>
+	</table>
+<br>
+				<div class="text-center">
+						<button class="btn btn-sm btn-outline-secondary" type="submit" style="font-family:serif">この内容で予約する</button>
+						<a th:href="@{/reservation/loadReservationPage}">
+						<button class="btn btn-sm btn-outline-secondary" type="button" style="font-family:serif">入力画面に戻る</button></a>
+				</div>
+</form>
+	</div>
+	</div>
+	<div
+          class="
+            table-responsive
+            col-lg-2
+            col-md-2
+            col-sm-2
+          "
+        >
+        </div>
+</div>	
+<br><br>
+</body>
+</html>

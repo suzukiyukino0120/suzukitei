@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- BootstrapのCSS読み込み -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>空室検索</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark p-7">
+  <a class="navbar-brand" th:href="@{/top}"><img th:src="@{/img/logo.png}" alt="" width="150" height="70" class="d-inline-block align-text-top"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	<a th:href="@{/toPlanList}"> <button class="btn btn-outline-danger" type="submit" style="font-family:serif">ご宿泊予約</button></a>
+  </div>
+</nav>
+<br>
+
+<div style="font-family:serif">	
+<div class="margin">
+<table class="table">
+	<th:block>
+	  <thead class="table-dark">
+	    <tr><th style="font-family:serif" colspan="8" th:text="${session.plan.name}"></th></tr>
+	  </thead>
+	  <tbody>
+		<tr>
+	    	<td>
+	    		<div  th:if="${session.plan.roomId == 1 || session.plan.roomId == 2}" th:text="'〇&emsp;禁煙'" style="color:red"></div>
+	    		<div  th:unless="${session.plan.roomId == 1 || session.plan.roomId == 2}" th:text="'&emsp;&emsp;禁煙'" style="color:darkgray"></div>
+	    	</td>
+	    	<td>
+	    		<div th:if="${session.plan.roomId == 2 || session.plan.roomId == 4}" th:text="'〇&emsp;客室露天風呂'" style="color:red"></div>
+	    		<div th:unless="${session.plan.roomId == 2 || session.plan.roomId == 4}" th:text="'&emsp;&emsp;客室露天風呂'" style="color:darkgray"></div>
+	    	</td>
+	    	<td>
+	    		<div th:if="${session.plan.breakfast == 1}" th:text="'〇&emsp;朝食'" style="color:red"></div>
+	    		<div th:unless="${session.plan.breakfast == 1}" th:text="'&emsp;&emsp;朝食'" style="color:darkgray"></div>
+	    	</td>
+	    	<td>
+	    		<div th:if="${session.plan.dinner == 1}" th:text="'〇&emsp;夕食'" style="color:red"></div>
+	    		<div th:unless="${session.plan.dinner == 1}" th:text="'&emsp;&emsp;夕食'" style="color:darkgray"></div>
+	    	</td>
+	    </tr>
+	    <tr>
+	      	<td colspan="4" style="font-family:serif">
+	      		<th:block th:each="content, stat : ${session.plan.comment.split('\r\n|\r|\n', -1)}">
+	  			<div th:text="${content}"></div>
+	      	</td>
+	    </tr> 	   
+	  </tbody>
+	  </th:block>
+	</table>
+	</div>
+	</div>
+	<br>
+	
+	<div class="row">
+	<div
+          class="
+            table-responsive
+            col-lg-2
+            col-md-2
+            col-sm-2
+          "
+        ></div>
+        <div
+          class="
+            table-responsive
+            col-lg-8
+            col-md-8
+            col-sm-8
+          "
+        >
+	
+	<form th:action="@{/reservableRoom/searchReservableRoom}" th:object="${searchReservableRoomForm}">
+	<table class="table">
+  	  	<thead class="table-dark">
+	  	  <tr>
+	  	  	<th style="font-family:serif" colspan="6">空室状況</th>
+	  	  </tr>
+  	  	</thead>
+  	  		<tr>
+  	  			<td align="center" colspan="5">
+  	  		</tr>
+  	  		
+	  	  <tr>
+	  	  <td width="100"></td>
+	  	  	<td align="center">
+	  	  	  <br>
+	  	  	   <div class="col-md-12">
+	  	  	  <input type="month" name="month" th:field="*{month}">
+	  	  	  </div>
+	   	  	 <td><br><div class="text-center"><button class="btn btn-outline-secondary" type="submit" style="font-family:serif">検索する</button></div></td>
+	  	  <td width="100"></td>
+	  	  </tr>
+	</table>
+	</form>
+	
+	<table  class="table">
+	  	  		<thead class="table-dark">
+	  	  			<tr>
+				  	  	<th colspan="2" class="text-center">日</th>
+				  	  	<th colspan="2" class="text-center">月</th>
+				  	  	<th colspan="2" class="text-center">火</th>
+				  	  	<th colspan="2" class="text-center">水</th>
+				  	  	<th colspan="2" class="text-center">木</th>
+				  	  	<th colspan="2" class="text-center">金</th>
+				  	  	<th colspan="2" class="text-center">土</th>
+				  	</tr>
+				 </thead>
+				 <tbody>
+				 <th:block th:each="day,status:${session.reservationCalender}">
+				  		<th:block th:if="${status.index%7==0}">
+				  	<tr>
+				  			<td colspan="2" align="center">
+				  				<div th:if="${day == null}" th:text="''"></div>
+				  				<div th:if="${day != null}" th:text="${day.date.getDayOfMonth()}"></div>
+				  				<div th:if="${day != null && day.state == '〇'}">
+			  	  					<form th:action="@{/reservation/toReservation}" method="post">
+				  	  				<input type="hidden" name="checkinDate" th:value="${day.date}"> 
+				  	  				<input type="hidden" name="planId" th:value="${session.plan.id}">
+									<button class="btn btn-sm btn-link" type="submit" style="font-family:serif" th:text="〇"></button>
+				  	  				</form>
+		  	  					</div>
+				  	  			<div th:if="${day != null && day.state == '×'}" th:text="${day.state}"></div>	
+				  			</td>
+				  		</th:block>
+				  		<th:block th:if="${status.index%7==6}">
+				  			<td colspan="2" align="center">
+				  			<div th:if="${day == null}" th:text="''"></div>
+				  				<div th:if="${day != null}" th:text="${day.date.getDayOfMonth()}"></div>
+				  				<div th:if="${day != null && day.state == '〇'}">
+			  	  					<form th:action="@{/reservation/toReservation}" method="post">
+				  	  				<input type="hidden" name="checkinDate" th:value="${day.date}"> 
+				  	  				<input type="hidden" name="planId" th:value="${session.plan.id}">
+									<button class="btn btn-sm btn-link" type="submit" style="font-family:serif" th:text="〇"></button>
+				  	  				</form>
+		  	  					</div>
+				  	  				<div th:if="${day != null && day.state == '×'}" th:text="${day.state}"></div>
+				  			</td>
+				  		</th:block>
+				  		<th:block th:if="${status.index%7==5}">
+				  			<td colspan="2" align="center">
+				  				<div th:if="${day == null}" th:text="''"></div>
+				  				<div th:if="${day != null}" th:text="${day.date.getDayOfMonth()}"></div>
+								<div th:if="${day != null && day.state == '〇'}">
+			  	  					<form th:action="@{/reservation/toReservation}" method="post">
+				  	  				<input type="hidden" name="checkinDate" th:value="${day.date}"> 
+				  	  				<input type="hidden" name="planId" th:value="${session.plan.id}">
+									<button class="btn btn-sm btn-link" type="submit" style="font-family:serif" th:text="〇"></button>
+				  	  				</form>
+		  	  					</div>
+				  	  				<div th:if="${day != null && day.state == '×'}" th:text="${day.state}"></div>
+				  			</td>
+				  		</th:block>
+				  		<th:block th:if="${status.index%7==4}">
+				  			<td colspan="2" align="center">
+				  				<div th:if="${day == null}" th:text="''"></div>
+				  				<div th:if="${day != null}" th:text="${day.date.getDayOfMonth()}"></div>
+				  				<div th:if="${day != null && day.state == '〇'}">
+			  	  					<form th:action="@{/reservation/toReservation}" method="post">
+				  	  				<input type="hidden" name="checkinDate" th:value="${day.date}"> 
+				  	  				<input type="hidden" name="planId" th:value="${session.plan.id}">
+									<button class="btn btn-sm btn-link" type="submit" style="font-family:serif" th:text="〇"></button>
+				  	  				</form>
+		  	  					</div>
+		  	  					<div th:if="${day != null && day.state == '×'}" th:text="${day.state}"></div>
+				  			</td>
+				  		</th:block>
+				  		<th:block th:if="${status.index%7==3}">
+				  			<td colspan="2" align="center">
+				  				<div th:if="${day == null}" th:text="''"></div>
+				  				<div th:if="${day != null}" th:text="${day.date.getDayOfMonth()}"></div>
+				  				<div th:if="${day != null && day.state == '〇'}">
+			  	  					<form th:action="@{/reservation/toReservation}" method="post">
+				  	  				<input type="hidden" name="checkinDate" th:value="${day.date}"> 
+				  	  				<input type="hidden" name="planId" th:value="${session.plan.id}">
+									<button class="btn btn-sm btn-link" type="submit" style="font-family:serif" th:text="〇"></button>
+				  	  				</form>
+		  	  					</div>
+		  	  					<div th:if="${day != null && day.state == '×'}" th:text="${day.state}"></div>
+				  				
+				  			</td>
+				  		</th:block>
+				  		<th:block th:if="${status.index%7==2}">
+				  			<td colspan="2" align="center">
+				  			<div th:if="${day == null}" th:text="''"></div>
+				  				<div th:if="${day != null}" th:text="${day.date.getDayOfMonth()}"></div>
+				  				<div th:if="${day != null && day.state == '〇'}">
+			  	  					<form th:action="@{/reservation/toReservation}" method="post">
+				  	  				<input type="hidden" name="checkinDate" th:value="${day.date}"> 
+				  	  				<input type="hidden" name="planId" th:value="${session.plan.id}">
+									<button class="btn btn-sm btn-link" type="submit" style="font-family:serif" th:text="〇"></button>
+				  	  				</form>
+		  	  					</div>
+		  	  					<div th:if="${day != null && day.state == '×'}" th:text="${day.state}"></div>
+				  			</td>
+				  		</th:block>
+				  		<th:block th:if="${status.index%7==1}">
+				  			<td colspan="2" align="center">
+				  				<div th:if="${day == null}" th:text="''"></div>
+				  				<div th:if="${day != null}" th:text="${day.date.getDayOfMonth()}"></div>
+				  				<div th:if="${day != null && day.state == '〇'}">
+			  	  					<form th:action="@{/reservation/toReservation}" method="post">
+				  	  				<input type="hidden" name="checkinDate" th:value="${day.date}"> 
+				  	  				<input type="hidden" name="planId" th:value="${session.plan.id}">
+									<button class="btn btn-sm btn-link" type="submit" style="font-family:serif" th:text="〇"></button>
+				  	  				</form>
+		  	  					</div>
+		  	  					<div th:if="${day != null && day.state == '×'}" th:text="${day.state}"></div>
+				  			</td>
+				  		</th:block>
+				 </th:block>
+				</tbody> 
+	  </table>
+	  	  		</div>
+<div class="col-lg-2
+            col-md-2
+            col-sm-2
+            ">
+</div>
+	  	  		
+			<br><br>
+				<div class="text-center">
+		 	<button class="btn btn-outline-secondary" type="submit" style="font-family:serif" onclick="window.history.back();">戻る</button>
+		 </div>
+	</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	
+		
+	
+<!-- jQuery読み込み -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<!-- Propper.js読み込み -->
+<!-- BootstrapのJavascript読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

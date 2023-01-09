@@ -1,0 +1,106 @@
+<code class="code-multiline"><!doctype html>
+<html lang="ja">
+ <head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   <!-- BootstrapのCSS読み込み -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+ <link rel="stylesheet" th:href="@{/css/style.css}" />
+   <title>管理者ログイン</title>
+ </head>
+ <body>
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-7">
+ <div class="container-fluid">
+  <a class="navbar-brand" th:href="@{/top}"><img th:src="@{/img/logo.png}" alt="" width="150" height="70" class="d-inline-block align-text-top"></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<div class="float-end">
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	<a th:href="@{/administrator/toLogin}"><button class="btn btn-sm btn-success" type="submit" style="font-family:serif">ログイン</button></a>
+  </div></div>
+  </div>
+</nav>
+
+      <!-- login form -->
+      <div class="row">
+      <div
+          class="
+            col-lg-4
+            col-md-4
+          "
+        >
+          </div>
+        <div
+          class="
+            col-lg-offset-4
+            col-lg-8
+            col-md-offset-4
+            col-md-8
+            col-sm-12
+            col-xs-12
+          "
+        >
+        <br>
+          <div class="well" style="color: black">
+          <div style="font-family:sans-serif">
+            <form method="post" th:action="@{/administrator/login}" th:object="${adminLoginForm}">
+              <fieldset>
+                <legend>ログイン</legend>
+				<!-- ログインできなかったらメッセージ出す -->
+                <div th:text="${loginError}" style="color: red"></div>
+                
+                <div class="form-group">
+                  <label>社員番号:</label>
+                  <div th:errors="*{employeeId}" style="color:red"></div>
+                  <div class="col-md-5">
+                  <input
+                    type="text"
+                    name="employeeId"
+                    class="form-control"
+                  />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>パスワード:</label>
+                    <div th:errors="*{password}" style="color:red"></div>
+                     <div class="col-md-5">
+                  <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                  />
+                  </div>
+                </div>
+                <br>
+                <div class="form-group">
+                  <button type="submit" class="btn btn-outline-primary">
+                    ログイン
+                  </button>
+				<a th:href="@{/administrator/toRegister}">	
+				<button type="button" class="btn btn-secondary">管理者登録</button></a>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div
+          class="
+            col-lg-offset-4
+            col-lg-2
+            col-md-offset-4
+            col-md-2
+          "
+        >
+          </div>
+      </div>
+<!-- jQuery読み込み -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+　　<!-- Propper.js読み込み -->
+  <!-- BootstrapのJavascript読み込み -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+ </body>
+</html>
+</code>

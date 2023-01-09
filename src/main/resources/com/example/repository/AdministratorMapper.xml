@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.repository.AdministratorMapper">
+
+<resultMap type="com.example.domain.Administrator" id="administratorMap">
+	<id property="id" column="id"></id>
+	<result property="employeeId" column="employee_id"></result>
+	<result property="password" column="password"></result>
+</resultMap>
+
+<select id="findByIdAndPass" resultType="com.example.domain.Administrator">
+	SELECT * FROM administrators WHERE employee_id = #{employeeId} AND password = #{password} 
+</select>
+
+<select id="load" resultType="com.example.domain.Administrator">
+	SELECT * FROM administrators WHERE employee_id = #{employeeId} 
+</select>
+
+<insert id="insert" parameterType="com.example.domain.Administrator">
+	INSERT INTO administrators (employee_id, password) VALUES (#{employeeId}, #{password})
+</insert>
+
+</mapper>

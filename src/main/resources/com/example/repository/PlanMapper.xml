@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.example.repository.PlanMapper">
+	
+	<resultMap type="com.example.domain.Plan" id="planMap">
+		<id property="id" column="p_id"></id>
+		<result property="id" column="p_id"></result>
+		<result property="name" column="p_name"></result>
+		<result property="basicCharge" column="p_basic_charge"></result>
+		<result property="additionalCharge" column="p_additional_charge"></result>
+		<result property="breakfast" column="p_breakfast"></result>
+		<result property="comment" column="p_comment"></result>
+		<result property="dinner" column="p_dinner"></result>
+		<result property="roomId" column="p_room_id"></result>
+		<result property="image" column="p_image"></result>
+ 		<association property="room" resultMap="room"></association>
+	</resultMap>
+	
+	<resultMap type="com.example.domain.Room" id="room">
+		<id property="id" column="r_id"></id>
+		<result property="smoking" column="r_smoking"></result>
+		<result property="bathroom" column="r_bathroom"></result>
+		<result property="guestCapacity" column="r_guest_capacity"></result>	
+		<collection property="reservationCalender" ofType="com.example.domain.ReservationCalender">
+			<id property="date" column="re_date"></id>
+			<result property="roomId" column="re_room_id"></result>
+			<result property="reservedRoom" column="re_reserved_room"></result>
+			<result property="reservationLimit" column="re_reservation_limit"></result>
+		</collection>
+	</resultMap>
+	
+	
+	<select id="findPlanWithDate" resultMap="planMap">
+			select 
+				r.id AS r_id, 
+				r.smoking AS r_smoking, 
+				r.bathroom AS r_bathroom, 
+				r.guest_capacity AS r_guest_capacity, 
+				p.id AS p_id, 
+				p.name AS p_name, 
+				p.basic_charge AS p_basic_charge, 
+				p.additional_charge AS p_additional_charge, 
+				p.breakfast AS p_breakfast, 
+				p.dinner AS p_dinner, 
+				p.comment AS p_comment, 
+				p.room_id AS p_room_id, 
+				p.image AS p_image, 
+				re.date AS re_date, 
+				re.room_id AS re_room_id, 
+				re.reserved_room AS re_reserved_room, 
+				re.reservation_limit AS re_reservation_limit 
+			from plans AS p 
+			join rooms AS r on r.id = p.room_id 
+			join (select * 
+					   from reservation_calender 
+					   where date between #{date} and DATE_ADD(#{date}, INTERVAL #{stayDays} DAY)) 
+					   AS re on r.id = re.room_id 
+		<where>
+			<if test="smoking != null">
+				AND r.smoking = #{smoking} 
+			</if>
+			<if test="bathroom != null">
+				AND r.bathroom = #{bathroom} 
+			</if>
+			<if test="breakfast != null">
+				AND p.breakfast = #{breakfast} 
+			</if>
+			<if test="dinner != null">
+				AND p.dinner = #{dinner} 
+			</if>
+				AND re.reservation_limit > re.reserved_room 
+				AND r.guest_capacity >= #{numOfGuest}
+		</where>
+	</select>
+	
+	<select id="findPlanWithoutDate" resultMap="planMap">
+		select r.id AS r_id, 
+				r.smoking AS r_smoking, 
+				r.bathroom AS r_bathroom, 
+				r.guest_capacity AS r_guest_capacity, 
+				p.id AS p_id, 
+				p.name AS p_name, 
+				p.basic_charge AS p_basic_charge, 
+				p.additional_charge AS p_additional_charge, 
+				p.breakfast AS p_breakfast, 
+				p.dinner AS p_dinner, 
+				p.comment AS p_comment, 
+				p.room_id AS p_room_id, 
+				p.image AS p_image 
+		from plans AS p 
+		join rooms AS r on r.id = p.room_id 
+		<where>
+			<if test="smoking != null">
+				AND r.smoking = #{smoking} 
+			</if>
+			<if test="bathroom != null">
+				AND r.bathroom = #{bathroom} 
+			</if>
+			<if test="breakfast != null">
+				AND p.breakfast = #{breakfast} 
+			</if>
+			<if test="dinner != null">
+				AND p.dinner = #{dinner}  
+			</if>
+			<if test="planId != null">
+				AND p.id = #{planId}
+			</if>
+			AND r.guest_capacity >= #{numOfGuest}
+		</where>
+	</select>
+	
+	<select id="findCharge" resultMap="planMap">
+		select p.basic_charge AS p_basic_charge, 
+			   p.additional_charge AS p_additional_charge 
+		from plans AS p 
+		where p.id = #{id}
+	</select>
+	
+	<select id="findGuestCapacity" resultMap="planMap">
+		select r.guest_capacity AS r_guest_capacity 
+		from plans AS p 
+		join rooms AS r on r.id = p.room_id 
+		where p.id = #{id}
+	</select>
+	
+	<select id="findAll" resultType="com.example.domain.Plan">
+		select * from plans
+	</select>
+	
+	<select id="findById" resultType="com.example.domain.Plan">
+		select * from plans where id=#{id}
+	</select>
+	
+	<update id="update">
+		update plans 
+		set name=#{name}, room_id=#{roomId}, breakfast=#{breakfast}, dinner=#{dinner}, basic_charge=#{basicCharge}, additional_charge=#{additionalCharge}, comment=#{comment}, image=#{image}  
+		where id=#{id} 	
+	</update>
+	
+	<insert id="insert">
+		insert into plans (name, room_id, breakfast, dinner, basic_charge, additional_charge, comment, image) 
+		values (#{name}, #{roomId}, #{breakfast}, #{dinner}, #{basicCharge}, #{additionalCharge}, #{comment}, #{image})
+	</insert>	
+	
+	<delete id="delete">
+		delete from plans where id=#{id}
+	</delete>
+
+<!-- 
+
+select 
+				r.id AS r_id, 
+				r.smoking AS r_smoking, 
+				r.bathroom AS r_bathroom, 
+				r.booking_capacity AS r_booking_capacity, 
+				r.guest_capacity AS r_guest_capacity, 
+				p.id AS p_id, 
+				p.name AS p_name, 
+				p.basic_charge AS p_basic_charge, 
+				p.additional_charge AS p_additional_charge, 
+				p.breakfast AS p_breakfast, 
+				p.dinner AS p_dinner, 
+				p.comment AS p_comment, 
+				p.room_id AS p_room_id, 
+				b.date AS r_b_date, 
+				b.room_id AS r_b_room_id, 
+				b.num_of_booking AS r_b_num_of_booking 
+			from plans AS p 
+			join rooms AS r on r.id = p.room_id 
+			join join (select * 
+					   from booking_calender 
+					   where date between '2022-01-26' and DATE_ADD('2022-01-26', INTERVAL 3 DAY)) AS b on r.id = b.room_id 
+
+select * 
+					   from booking_calender 
+					   where date between '2022-01-26' and ''
+
+	<select id="findPlanByDate" resultMap="roomMap">
+			select 
+				r.id AS r_id, 
+				r.smoking AS r_smoking, 
+				r.bathroom AS r_bathroom, 
+				r.booking_capa AS r_booking_capa, 
+				r.guest_capa AS r_guest_capa, 
+				p.id AS p_id, 
+				p.name AS p_name, 
+				p.basic_charge AS p_basic_charge, 
+				p.additional_charge AS p_additional_charge, 
+				p.breakfast AS p_breakfast, 
+				p.dinner AS p_dinner, 
+				p.comment AS p_comment, 
+				p.room_id AS p_room_id, 
+				b.date AS b_date, 
+				b.room_id AS b_room_id, 
+				b.num_of_booking AS b_num_of_booking,
+				cal.date 
+				
+			from (select #{date} + INTERVAL seq_no DAY AS date
+ 				from (select @seq_no := 0 AS seq_no
+      			union
+     				select @seq_no := @seq_no + 1 AS seq_no 
+     				from information_schema.COLUMNS
+      				limit #{stayDays}) tmp) as cal
+			right join booking_calender AS b on cal.date = b.date 
+			right join rooms AS r on r.id = b.room_id 
+			right join plans AS p on r.id = p.room_id
+		<where>
+			<if test="smoking != null">
+				AND r.smoking = 0 
+			</if>
+			<if test="bathroom != null">
+				AND r.bathroom = 1 
+			</if>
+			<if test="breakfast != null">
+				AND p.breakfast = 1 
+			</if>
+			<if test="dinner != null">
+				AND p.dinner = 1 
+			</if>
+				AND (cal.date = #{date} 
+				AND 
+					<![CDATA[
+					r.booking_capa > b.num_of_booking)
+					]]>
+		</where>
+
+	</select>
+ -->
+
+</mapper>

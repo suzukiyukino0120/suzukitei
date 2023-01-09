@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+.yohaku {
+     margin : 0px 150px ;
+}
+
+.example {
+  position: relative;
+  }
+
+.example p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%,-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  margin:0;
+  padding:0;
+  /*文字の装飾は省略*/
+  }
+
+.image-plan {
+  width : 100vw ; 
+}
+
+.margin{
+	margin: 0px 150px 0px 150px;
+	padding: 0px 150px 0px 150px;
+}
+.emptyroom-search-margin{
+	margin: 0px 250px 0px 250px;
+	padding: 0px 250px 0px 250px;
+}
+
+.center{
+  width: 400px;
+  text-align: center;
+}
+
+

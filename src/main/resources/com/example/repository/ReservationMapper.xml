@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.repository.ReservationMapper">
+	<resultMap type="com.example.domain.Reservation" id="ReservationMapper">
+		<id property="id" column="id"></id>
+		<result property="planId" column="plan_id"></result>
+		<result property="name" column="name"></result>
+		<result property="kana" column="kana"></result>
+		<result property="zipcode" column="zipcode"></result>
+		<result property="address" column="address"></result>
+		<result property="telephone" column="telephone"></result>
+		<result property="email" column="email"></result>
+		<result property="checkinDate" column="checkin_date"></result>
+		<result property="stayDays" column="stay_days"></result>
+		<result property="numOfGuest" column="num_of_guest"></result>
+		<result property="payMethod" column="pay_method"></result>
+		<result property="totalPrice" column="total_price"></result>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.example.domain.Reservation">
+		insert into reservation (plan_id, 
+							name, 
+							kana, 
+							zipcode, 
+							address, 
+							telephone, 
+							email, 
+							checkin_date, 
+							stay_days, 
+							num_of_guest, 
+							pay_method, 
+							total_price) 
+					values(#{planId}, 
+							#{name}, 
+							#{kana}, 
+							#{zipcode}, 
+							#{address}, 
+							#{telephone}, 
+							#{email}, 
+							#{checkinDate}, 
+							#{stayDays}, 
+							#{numOfGuest}, 
+							#{payMethod}, 
+							#{totalPrice})
+	</insert>
+	
+	<select id="find" resultType="com.example.domain.Reservation">
+		select * 
+		from reservation 
+		<where>
+			<if test="name != null">
+				AND name LIKE CONCAT('%', #{name}, '%')
+			</if>
+			<if test="kana != null">
+				AND kana LIKE CONCAT('%', #{kana}, '%')
+			</if>
+			<if test="payMethod != null">
+				AND pay_method = #{payMethod}
+			</if>
+			<if test="checkinDate != null">
+				AND checkin_date <![CDATA[ <= ]]> #{checkinDate} 
+				AND DATE_ADD(checkin_date, INTERVAL stay_days DAY) <![CDATA[ >= ]]> #{checkinDate}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findById" resultType="com.example.domain.Reservation">
+		select * from reservation where id = #{id}
+	</select>
+	
+	<delete id="delete">
+		delete from reservation where id = #{id}
+	</delete>
+
+</mapper>
+
